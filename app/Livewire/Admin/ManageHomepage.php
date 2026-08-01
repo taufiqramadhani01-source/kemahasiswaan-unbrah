@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Models\Setting;
+use App\Models\Layanan;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -25,7 +26,8 @@ class ManageHomepage extends Component
     public $wr3_photo_file        = null;
 
     // ─── Layanan (6 kartu) ───────────────────────────────────────────────────
-    public array $layanan_cards = [];
+    public array $layanan_cards      = [];
+    public array $availableLayanans  = [];
 
     // ─── Profil / About + Video ──────────────────────────────────────────────
     public string $about_label       = '';
@@ -107,8 +109,14 @@ class ManageHomepage extends Component
         ];
         $this->layanan_cards = json_decode(Setting::get('layanan_cards', json_encode($defaultLayanan)), true);
         while (count($this->layanan_cards) < 6) {
-            $this->layanan_cards[] = ['label'=>'Layanan','title'=>'','icon'=>'briefcase','url'=>'#','color'=>'slate'];
+            $this->layanan_cards[] = ['layanan_id'=>null,'label'=>'Layanan','title'=>'','icon'=>'briefcase','url'=>'#','color'=>'slate'];
         }
+
+        // Available layanans for dropdown
+        $this->availableLayanans = Layanan::where('is_active', 1)
+            ->orderBy('order')
+            ->get(['id', 'title', 'slug', 'icon'])
+            ->toArray();
 
         // About Section
         $this->about_label        = Setting::get('about_label',        'Tentang Kemahasiswaan');
@@ -168,6 +176,21 @@ class ManageHomepage extends Component
     public function updateLayananField(int $index, string $field, $value): void
     {
         $this->layanan_cards[$index][$field] = $value;
+    }
+
+    public function selectLayananCard(int $index, $layanandId): void
+    {
+        if ($layanandId && $layanan = Layanan::find((int) $layanandId)) {
+            $this->layanan_cards[$index]['layanan_id'] = $layanan->id;
+            $this->layanan_cards[$index]['title']      = $layanan->title;
+            $this->layanan_cards[$index]['url']        = '/layanan?tab=' . $layanan->slug;
+            $this->layanan_cards[$index]['icon']       = 'briefcase';
+            $this->layanan_cards[$index]['color']      = 'brand-green';
+        } else {
+            $this->layanan_cards[$index]['layanan_id'] = null;
+            $this->layanan_cards[$index]['title']      = '';
+            $this->layanan_cards[$index]['url']        = '#';
+        }
     }
 
     public function updateExternalLink(int $index, string $field, $value): void

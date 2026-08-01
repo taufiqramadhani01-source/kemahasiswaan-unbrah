@@ -130,35 +130,72 @@
             @elseif ($activeSection === 'layanan')
                 <div class="space-y-4">
                     <p class="text-[11px] text-[#8c887d] bg-[#faf9f6] border border-[#e5e2d9] rounded-xl px-4 py-3">
-                        💡 <b>6 Kartu Layanan Cepat</b> tampil tepat di bawah banner beranda untuk jalan pintas menu layanan publik.
+                        💡 <b>6 Kartu Layanan Cepat</b> tampil tepat di bawah banner beranda. Pilih layanan dari daftar yang tersedia — judul dan link akan terisi otomatis.
                     </p>
-                    @foreach ($layanan_cards as $i => $card)
-                        <div class="bg-white border border-[#e5e2d9] rounded-2xl shadow-sm overflow-hidden">
-                            <div class="flex items-center gap-3 px-5 py-3 bg-[#faf9f6] border-b border-[#e5e2d9]">
-                                <span class="w-5 h-5 rounded-full bg-[#052c22] text-white text-[10px] font-bold flex items-center justify-center">{{ $i + 1 }}</span>
-                                <span class="text-xs font-bold text-[#1a2421]">Kartu Layanan #{{ $i + 1 }}</span>
-                            </div>
-                            <div class="p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div>
-                                    <label class="block text-[10px] font-bold text-[#5c5950] uppercase tracking-wider mb-1">Label Kecil (Atas)</label>
-                                    <input type="text" value="{{ $card['label'] ?? '' }}" wire:change="updateLayananField({{ $i }}, 'label', $event.target.value)"
-                                        class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 focus:outline-none focus:border-[#052c22] bg-[#faf9f6]"
-                                        placeholder="Layanan 0{{ $i+1 }}">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold text-[#5c5950] uppercase tracking-wider mb-1">Nama/Judul Kartu</label>
-                                    <input type="text" value="{{ $card['title'] ?? '' }}" wire:change="updateLayananField({{ $i }}, 'title', $event.target.value)"
-                                        class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 focus:outline-none focus:border-[#052c22] bg-[#faf9f6]">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold text-[#5c5950] uppercase tracking-wider mb-1">Link URL</label>
-                                    <input type="text" value="{{ $card['url'] ?? '' }}" wire:change="updateLayananField({{ $i }}, 'url', $event.target.value)"
-                                        class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 focus:outline-none focus:border-[#052c22] bg-[#faf9f6]">
-                                </div>
-                            </div>
+
+                    @if(count($availableLayanans) === 0)
+                        <div class="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-xs text-amber-700">
+                            ⚠️ Belum ada data layanan. Silakan tambah layanan terlebih dahulu di menu <a href="/admin/layanans" class="underline font-semibold">Kelola Layanan</a>.
                         </div>
-                    @endforeach
+                    @endif
+
+                    <div class="bg-white border border-[#e5e2d9] rounded-2xl shadow-sm overflow-hidden">
+                        {{-- Header Kolom --}}
+                        <div class="grid grid-cols-12 gap-3 px-4 py-2 bg-[#f5f3ef] border-b border-[#e5e2d9] text-[10px] font-bold uppercase tracking-wider text-[#8c887d]">
+                            <div class="col-span-1 text-center">#</div>
+                            <div class="col-span-4">Pilih Layanan</div>
+                            <div class="col-span-3">Label Kecil (Atas)</div>
+                            <div class="col-span-4">Preview Judul & URL</div>
+                        </div>
+
+                        {{-- Baris per Kartu --}}
+                        @foreach ($layanan_cards as $i => $card)
+                            <div class="grid grid-cols-12 gap-3 px-4 py-3 items-center {{ $i % 2 === 0 ? 'bg-white' : 'bg-[#faf9f6]' }} border-b border-[#f0ede7] last:border-0">
+                                {{-- Nomor --}}
+                                <div class="col-span-1 flex justify-center">
+                                    <span class="w-6 h-6 rounded-full bg-[#052c22] text-white text-[10px] font-bold flex items-center justify-center">{{ $i + 1 }}</span>
+                                </div>
+
+                                {{-- Dropdown Layanan --}}
+                                <div class="col-span-4">
+                                    <select wire:change="selectLayananCard({{ $i }}, $event.target.value)"
+                                        class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 focus:outline-none focus:border-[#052c22] bg-white">
+                                        <option value="">— Tidak dipilih —</option>
+                                        @foreach ($availableLayanans as $layanan)
+                                            <option value="{{ $layanan['id'] }}" {{ ($card['layanan_id'] ?? null) == $layanan['id'] ? 'selected' : '' }}>
+                                                {{ $layanan['icon'] ?? '' }} {{ $layanan['title'] }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                {{-- Label Kecil --}}
+                                <div class="col-span-3">
+                                    <input type="text"
+                                        value="{{ $card['label'] ?? '' }}"
+                                        wire:change="updateLayananField({{ $i }}, 'label', $event.target.value)"
+                                        class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 focus:outline-none focus:border-[#052c22] bg-white"
+                                        placeholder="Layanan 0{{ $i + 1 }}">
+                                </div>
+
+                                {{-- Preview --}}
+                                <div class="col-span-4">
+                                    @if (!empty($card['title']))
+                                        <div class="text-[11px] font-semibold text-[#052c22] leading-tight truncate">{{ $card['title'] }}</div>
+                                        <div class="text-[10px] text-[#8c887d] font-mono truncate mt-0.5">{{ $card['url'] ?? '#' }}</div>
+                                    @else
+                                        <span class="text-[10px] italic text-[#c8c4bc]">Belum dipilih</span>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <p class="text-[10px] text-[#b0ac9f] px-1">
+                        💾 Klik <b>Simpan Semua Pengaturan</b> di bawah setelah memilih layanan.
+                    </p>
                 </div>
+
 
             {{-- TAB: PROFIL & VIDEO --}}
             @elseif ($activeSection === 'about')
