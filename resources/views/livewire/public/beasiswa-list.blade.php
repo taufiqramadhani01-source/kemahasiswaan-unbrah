@@ -42,11 +42,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse ($beasiswas as $beasiswa)
                 @php
-                    $isOpen = false;
-                    if ($beasiswa->start_date && $beasiswa->end_date) {
-                        $now = now();
-                        $isOpen = $now->between($beasiswa->start_date, $beasiswa->end_date);
-                    }
+                    $isOpen = (bool) $beasiswa->is_active;
                 @endphp
                 <div class="bg-white border border-[#e5e2d9] rounded-2xl p-6 shadow-sm hover:shadow-md transition duration-200 flex flex-col justify-between group">
                     <div>
@@ -72,17 +68,17 @@
                             {{ $beasiswa->name }}
                         </h2>
 
-                        <!-- Jadwal Pendaftaran -->
-                        @if ($beasiswa->start_date && $beasiswa->end_date)
-                            <div class="flex items-center gap-1.5 text-xs text-[#5c5950] font-mono mb-4 bg-[#faf9f6] p-2 rounded-xl border border-[#e5e2d9]">
-                                <span>📅 Periode:</span>
-                                <span class="font-bold text-[#052c22]">{{ $beasiswa->start_date->format('d M') }} - {{ $beasiswa->end_date->format('d M Y') }}</span>
-                            </div>
+                        <!-- Deskripsi Singkat -->
+                        @if ($beasiswa->description)
+                            <p class="text-xs text-[#5c5950] leading-relaxed mb-4 font-light">
+                                {{ $beasiswa->description }}
+                            </p>
                         @endif
 
                         <!-- Syarat & Ketentuan Singkat -->
                         @if ($beasiswa->requirements)
-                            <div class="text-xs text-[#5c5950] leading-relaxed line-clamp-3 mb-6 font-light">
+                            <div class="text-xs text-[#5c5950] leading-relaxed line-clamp-3 mb-6 font-light bg-[#faf9f6] p-3 rounded-xl border border-[#e5e2d9]">
+                                <strong class="text-[#052c22] font-bold block mb-1 text-[11px]">Persyaratan:</strong>
                                 {!! nl2br(e($beasiswa->requirements)) !!}
                             </div>
                         @endif

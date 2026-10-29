@@ -15,9 +15,6 @@
     
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
-    <!-- Alpine.js (Local Offline) -->
-    <script defer src="/js/alpine.js"></script>
-    
     <!-- SweetAlert2 (Local Offline) -->
     <script src="/js/sweetalert2.js"></script>
     
@@ -30,7 +27,7 @@
         $secondaryColor = setting('color_secondary', '#003316');   // Default Green 900
         $accentColor    = setting('color_accent', '#EDC97F');      // Default Gold 500
         $accentHover    = setting('color_accent_hover', '#dcb360'); // Default Gold 600
-        $isGradient     = setting('theme_gradient', true);
+        $isGradient     = setting('theme_use_gradient', 'true') === 'true';
     @endphp
     <style>
         :root {

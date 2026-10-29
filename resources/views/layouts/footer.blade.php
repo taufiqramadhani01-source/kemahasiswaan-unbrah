@@ -38,14 +38,14 @@
 
             <!-- Column 2: Navigasi Pintas dari Menu DB (Col span 2) -->
             @php
-                $footerMenus = \App\Models\Menu::whereNull('parent_id')->orderBy('order')->limit(7)->get();
+                $footerMenus = \App\Models\Menu::with('page')->whereNull('parent_id')->orderBy('order')->limit(7)->get();
             @endphp
             <div class="lg:col-span-2 lg:col-start-6 space-y-6">
                 <h4 class="text-white font-bold font-display text-sm tracking-wider uppercase">Navigasi Pintas</h4>
                 <ul class="space-y-3 text-xs">
                     @forelse ($footerMenus as $m)
                         @php
-                            $mUrl = $m->type === 'page' && $m->page ? '/' . $m->page->slug : ($m->external_url ?? '#');
+                            $mUrl = $m->type === 'page' && $m->page ? '/page/' . $m->page->slug : ($m->external_url ?? '#');
                         @endphp
                         <li>
                             <a href="{{ $mUrl }}" class="hover:text-white transition-colors">{{ $m->title }}</a>

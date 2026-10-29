@@ -14,10 +14,11 @@ class Setting extends Model
      */
     public static function get(string $key, mixed $default = null): mixed
     {
-        return Cache::rememberForever("setting_{$key}", function () use ($key, $default) {
-            $setting = static::where('key', $key)->first();
-            return $setting ? $setting->value : $default;
+        $all = Cache::rememberForever('app_settings_all', function () {
+            return static::pluck('value', 'key')->toArray();
         });
+
+        return array_key_exists($key, $all) && $all[$key] !== null ? $all[$key] : $default;
     }
 
     /**
@@ -30,6 +31,8 @@ class Setting extends Model
             ['value' => $value, 'group' => $group, 'label' => $label]
         );
         Cache::forget("setting_{$key}");
+        Cache::forget("settings_group_{$group}");
+        Cache::forget('app_settings_all');
     }
 
     /**

@@ -24,7 +24,8 @@ class Home extends Component
             ->get();
 
         // Mengambil beasiswa aktif (limit 3)
-        $latestBeasiswas = Beasiswa::latest()
+        $latestBeasiswas = Beasiswa::where('is_active', true)
+            ->latest()
             ->limit(3)
             ->get();
 

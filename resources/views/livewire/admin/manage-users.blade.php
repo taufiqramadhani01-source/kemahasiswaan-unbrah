@@ -123,6 +123,7 @@
                         <select wire:model.live="role" class="w-full px-3 py-2 border border-[#dcd9d0] rounded-xl text-xs bg-[#faf9f6] focus:outline-none focus:border-[#c8b282] transition">
                             <option value="superadmin">👑 Super Admin (Akses Penuh Seluruh Sistem)</option>
                             <option value="staf_layanan">🎓 Staf Unit Kerja (Akan Mengikuti Kelompok Hak Akses di Bawah)</option>
+                            <option value="staf_humas">📰 Staf Humas & Publikasi (Akan Mengikuti Kelompok Hak Akses di Bawah)</option>
                         </select>
                         @error('role') <p class="text-red-500 text-[10px] mt-1">{{ $message }}</p> @enderror
                     </div>

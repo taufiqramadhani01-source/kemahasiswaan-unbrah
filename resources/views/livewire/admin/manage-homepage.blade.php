@@ -20,6 +20,17 @@
         </div>
     @endif
 
+    @if ($errors->any())
+        <div class="bg-red-50 border border-red-200 text-red-700 text-xs px-4 py-3 rounded-xl space-y-1">
+            <p class="font-bold">⚠️ Terdapat kesalahan input:</p>
+            <ul class="list-disc list-inside text-[11px]">
+                @foreach ($errors->all() as $err)
+                    <li>{{ $err }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     {{-- Tab Navigation --}}
     <div class="flex gap-1 border-b border-[#e5e2d9] overflow-x-auto">
         @foreach([
@@ -58,10 +69,16 @@
                                 <div class="md:col-span-2">
                                     <label class="block text-[10px] font-bold text-[#5c5950] uppercase tracking-wider mb-2">Foto Banner</label>
                                     <div class="flex items-center gap-4">
-                                        <img src="{{ $slide['image'] }}" class="w-36 h-20 object-cover rounded-xl border border-[#e5e2d9]">
+                                        @php
+                                            $slidePreviewUrl = !empty($slide_photo_files[$i]) && method_exists($slide_photo_files[$i], 'temporaryUrl')
+                                                ? $slide_photo_files[$i]->temporaryUrl()
+                                                : ($slide['image'] ?? '');
+                                        @endphp
+                                        <img src="{{ $slidePreviewUrl }}" class="w-36 h-20 object-cover rounded-xl border border-[#e5e2d9]">
                                         <div>
                                             <input type="file" wire:model="slide_photo_files.{{ $i }}" accept="image/*" class="text-[11px] text-[#5c5950]">
                                             <p class="text-[10px] text-[#b0aa9f] mt-1">Disarankan resolusi landscape tinggi (contoh: 1920x800 px).</p>
+                                            @error("slide_photo_files.{$i}") <p class="text-red-500 text-[10px] mt-1">{{ $message }}</p> @enderror
                                         </div>
                                     </div>
                                 </div>
@@ -76,14 +93,14 @@
                                 ] as [$f,$l])
                                 <div>
                                     <label class="block text-[10px] font-bold text-[#5c5950] uppercase tracking-wider mb-1">{{ $l }}</label>
-                                    <input type="text" value="{{ $slide[$f] ?? '' }}" wire:change="updateSlideField({{ $i }}, '{{ $f }}', $event.target.value)"
+                                    <input type="text" wire:model.live="slides.{{ $i }}.{{ $f }}"
                                         class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 focus:outline-none focus:border-[#052c22] bg-[#faf9f6]">
                                 </div>
                                 @endforeach
                                 <div class="md:col-span-2">
-                                    <label class="block text-[10px] font-bold text-[#5c5950] uppercase tracking-wider mb-1">Deskripsi Ringkat</label>
-                                    <textarea wire:change="updateSlideField({{ $i }}, 'description', $event.target.value)" rows="2"
-                                        class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 focus:outline-none focus:border-[#052c22] bg-[#faf9f6] resize-none">{{ $slide['description'] ?? '' }}</textarea>
+                                    <label class="block text-[10px] font-bold text-[#5c5950] uppercase tracking-wider mb-1">Deskripsi Ringkas</label>
+                                    <textarea wire:model.live="slides.{{ $i }}.description" rows="2"
+                                        class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 focus:outline-none focus:border-[#052c22] bg-[#faf9f6] resize-none"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -95,9 +112,15 @@
                 <div class="bg-white border border-[#e5e2d9] rounded-2xl shadow-sm p-6 space-y-5">
                     <div class="flex items-start gap-5 pb-5 border-b border-[#f0ede7]">
                         <div class="shrink-0 text-center">
-                            <img src="{{ $wr3_photo_path }}" class="w-24 h-28 object-cover rounded-xl border border-[#e5e2d9] mx-auto">
+                            @php
+                                $wr3PreviewUrl = !empty($wr3_photo_file) && method_exists($wr3_photo_file, 'temporaryUrl')
+                                    ? $wr3_photo_file->temporaryUrl()
+                                    : $wr3_photo_path;
+                            @endphp
+                            <img src="{{ $wr3PreviewUrl }}" class="w-24 h-28 object-cover rounded-xl border border-[#e5e2d9] mx-auto">
                             <div class="mt-3">
                                 <input type="file" wire:model="wr3_photo_file" accept="image/*" class="text-[10px] text-[#5c5950] max-w-[130px]">
+                                @error('wr3_photo_file') <p class="text-red-500 text-[10px] mt-1">{{ $message }}</p> @enderror
                             </div>
                         </div>
                         <div class="flex-1 space-y-4">
@@ -172,8 +195,7 @@
                                 {{-- Label Kecil --}}
                                 <div class="col-span-3">
                                     <input type="text"
-                                        value="{{ $card['label'] ?? '' }}"
-                                        wire:change="updateLayananField({{ $i }}, 'label', $event.target.value)"
+                                        wire:model.live="layanan_cards.{{ $i }}.label"
                                         class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 focus:outline-none focus:border-[#052c22] bg-white"
                                         placeholder="Layanan 0{{ $i + 1 }}">
                                 </div>
@@ -321,12 +343,12 @@
                                 <div class="grid grid-cols-2 gap-3 p-3 border border-[#e5e2d9] rounded-xl bg-[#faf9f6]">
                                     <div>
                                         <label class="block text-[9px] text-[#8c887d] mb-0.5">Nama Link {{ $j+1 }}</label>
-                                        <input type="text" value="{{ $link['label'] }}" wire:change="updateExternalLink({{ $j }}, 'label', $event.target.value)"
+                                        <input type="text" wire:model.live="footer_external_links.{{ $j }}.label"
                                             class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-1.5 bg-white">
                                     </div>
                                     <div>
                                         <label class="block text-[9px] text-[#8c887d] mb-0.5">URL Target {{ $j+1 }}</label>
-                                        <input type="text" value="{{ $link['url'] }}" wire:change="updateExternalLink({{ $j }}, 'url', $event.target.value)"
+                                        <input type="text" wire:model.live="footer_external_links.{{ $j }}.url"
                                             class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-1.5 bg-white">
                                     </div>
                                 </div>
@@ -351,12 +373,17 @@
                     @if ($activeSection === 'slides')
                         <div class="space-y-4">
                             @foreach ($slides as $idx => $s)
+                                @php
+                                    $rightSlideImg = !empty($slide_photo_files[$idx]) && method_exists($slide_photo_files[$idx], 'temporaryUrl')
+                                        ? $slide_photo_files[$idx]->temporaryUrl()
+                                        : ($s['image'] ?? '');
+                                @endphp
                                 <div class="border border-[#e5e2d9] rounded-xl overflow-hidden shadow-sm bg-white text-[10px]">
                                     <div class="bg-[#faf9f6] px-3 py-1.5 border-b border-[#e5e2d9] flex justify-between items-center text-[9px] font-bold text-[#5c5950]">
                                         <span>PRATINJAU SLIDE #{{ $idx + 1 }}</span>
                                     </div>
                                     <div class="bg-[#052c22] text-white p-4 relative" style="min-height: 120px;">
-                                        <div class="absolute inset-0 bg-cover bg-center opacity-30" style="background-image: url('{{ $s['image'] ?? '' }}')"></div>
+                                        <div class="absolute inset-0 bg-cover bg-center opacity-30" style="background-image: url('{{ $rightSlideImg }}')"></div>
                                         <div class="relative z-10 space-y-1.5">
                                             <span class="px-2 py-0.5 rounded bg-[#c8b282]/20 text-[#c8b282] border border-[#c8b282]/30 text-[7px] font-bold uppercase tracking-wider inline-block">
                                                 {{ $s['badge'] ?: 'BADGE' }}
@@ -380,10 +407,15 @@
 
                     {{-- 2. PREVIEW SAMBUTAN --}}
                     @elseif ($activeSection === 'sambutan')
+                        @php
+                            $rightWr3Img = !empty($wr3_photo_file) && method_exists($wr3_photo_file, 'temporaryUrl')
+                                ? $wr3_photo_file->temporaryUrl()
+                                : $wr3_photo_path;
+                        @endphp
                         <div class="border border-[#e5e2d9] rounded-xl overflow-hidden shadow-sm bg-white p-4 space-y-3">
                             <div class="flex gap-3 items-start">
                                 <div class="w-1/3 shrink-0">
-                                    <img src="{{ $wr3_photo_path }}" class="w-full aspect-[3/4] object-cover rounded-lg border border-slate-200">
+                                    <img src="{{ $rightWr3Img }}" class="w-full aspect-[3/4] object-cover rounded-lg border border-slate-200">
                                 </div>
                                 <div class="w-2/3 space-y-1.5">
                                     <h4 class="font-bold text-[#052c22] text-[10px] leading-tight">{{ $wr3_name ?: 'Nama WR III' }}</h4>

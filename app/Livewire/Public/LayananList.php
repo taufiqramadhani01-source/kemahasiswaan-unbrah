@@ -26,6 +26,10 @@ class LayananList extends Component
     public function render()
     {
         $tabs = \App\Models\Layanan::where('is_active', true)->orderBy('order', 'asc')->get();
+
+        if ($tabs->isNotEmpty() && !$tabs->contains('slug', $this->activeTab)) {
+            $this->activeTab = $tabs->first()->slug;
+        }
         
         $beasiswas = [];
         if ($this->activeTab === 'beasiswa') {

@@ -2,18 +2,23 @@
 
 namespace Tests\Feature;
 
-// use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * A basic test example.
      */
     public function test_the_application_returns_a_successful_response(): void
     {
-        $response = $this->get('/');
+        $this->seed();
 
-        $response->assertStatus(200);
+        foreach (['/', '/layanan', '/ormawa', '/beasiswa', '/prestasi', '/berita', '/dokumen', '/page/sop-ormawa'] as $route) {
+            $response = $this->get($route);
+            $response->assertStatus(200);
+        }
     }
 }

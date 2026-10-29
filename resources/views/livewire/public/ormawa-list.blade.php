@@ -16,7 +16,18 @@
 
     <!-- CONTENT SECTION -->
     <section class="py-16 bg-slate-50 min-h-[700px]">
-        <div class="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 space-y-16">
+        <div class="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 space-y-12">
+            @if($ormawas->count() > 1)
+                <div class="flex flex-wrap justify-center gap-2.5">
+                    @foreach($ormawas as $org)
+                        <button type="button"
+                                wire:click="switchTab('{{ $org->slug }}')"
+                                class="px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer {{ $activeOrmawa?->slug === $org->slug ? 'bg-brand-green-900 text-white shadow-md ring-2 ring-brand-gold-500/40' : 'bg-white text-slate-600 hover:bg-brand-green-50 hover:text-brand-green-900 border border-slate-200' }}">
+                            {{ $org->name }}
+                        </button>
+                    @endforeach
+                </div>
+            @endif
             
             @if($activeOrmawa)
                 <div class="tab-content active space-y-12 animate-fade-in">

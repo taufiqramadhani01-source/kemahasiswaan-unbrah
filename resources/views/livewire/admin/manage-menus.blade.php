@@ -40,7 +40,11 @@
                                 <p class="text-xs font-bold text-[#052c22] truncate">{{ $menu->title }}</p>
                                 <p class="text-[10px] text-[#8c887d] truncate">
                                     @if ($menu->type === 'page' && $menu->page)
-                                        📄 /{{ $menu->page->slug }}
+                                        📄 /page/{{ $menu->page->slug }}
+                                    @elseif ($menu->type === 'ormawa')
+                                        🏛 {{ $menu->external_url }}
+                                    @elseif ($menu->type === 'layanan')
+                                        🎓 {{ $menu->external_url }}
                                     @elseif ($menu->type === 'external')
                                         🔗 {{ $menu->external_url }}
                                     @else
@@ -73,9 +77,15 @@
                                             <p class="text-xs text-[#1a2421] font-semibold truncate">{{ $child->title }}</p>
                                             <p class="text-[10px] text-[#8c887d] truncate">
                                                 @if ($child->type === 'page' && $child->page)
-                                                    📄 /{{ $child->page->slug }}
+                                                    📄 /page/{{ $child->page->slug }}
+                                                @elseif ($child->type === 'ormawa')
+                                                    🏛 {{ $child->external_url }}
+                                                @elseif ($child->type === 'layanan')
+                                                    🎓 {{ $child->external_url }}
                                                 @elseif ($child->type === 'external')
                                                     🔗 {{ $child->external_url }}
+                                                @else
+                                                    <span class="text-amber-500">⚠ Tidak ada target</span>
                                                 @endif
                                             </p>
                                         </div>

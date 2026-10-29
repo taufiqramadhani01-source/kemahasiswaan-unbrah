@@ -64,7 +64,6 @@ class ManageOrmawas extends Component
             $this->name        = $ormawa->name;
             $this->slug        = $ormawa->slug;
             $this->logo_path   = $ormawa->logo_path;
-            $this->image_path  = $ormawa->image_path;
             $this->description = $ormawa->description;
             $this->structure   = $ormawa->structure ?? [];
             $this->focus_items = $ormawa->focus_items ?? [];
@@ -74,8 +73,6 @@ class ManageOrmawas extends Component
             $this->slug        = '';
             $this->logo_path   = '';
             $this->logo_file   = null;
-            $this->image_path  = '';
-            $this->image_file  = null;
             $this->description = '';
             $this->focus_items = [];
             $this->structure   = [

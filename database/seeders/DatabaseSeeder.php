@@ -66,31 +66,70 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // ─── 3. SEED DYNAMIC LAYANANS (LAYANAN MAHASISWA) ────────────────────────
-        $layananBeasiswa = Layanan::create([
+        Layanan::create([
             'title' => 'Layanan Beasiswa',
             'slug' => 'beasiswa',
             'icon' => '🎓',
+            'category' => 'Bantuan Biaya Pendidikan & Prestasi',
+            'fee' => 'Gratis Bagi Mahasiswa Aktif UNBRAH',
             'content' => '<h3>Informasi & Pendaftaran Beasiswa</h3><p>Universitas Baiturrahmah berkomitmen membantu studi mahasiswa melalui berbagai bantuan biaya pendidikan.</p><ul><li>Beasiswa KIP-Kuliah (Kemendikbudristek)</li><li>Beasiswa Peningkatan Prestasi Akademik (PPA)</li><li>Beasiswa Yayasan Pendidikan Baiturrahmah</li></ul>',
             'is_active' => true,
             'order' => 1,
         ]);
 
-        $layananKonseling = Layanan::create([
+        Layanan::create([
             'title' => 'Layanan Konseling & Psikologi',
-            'slug' => 'konseling',
+            'slug' => 'psikologi',
             'icon' => '🤝',
+            'category' => 'Bimbingan & Konseling Mahasiswa',
+            'fee' => 'Gratis Bagi Mahasiswa Aktif UNBRAH',
             'content' => '<h3>Layanan Konseling Psikologis Gratis</h3><p>Kami menyediakan bimbingan konseling gratis bagi mahasiswa yang mengalami kendala belajar, stres, maupun membutuhkan konseling karir bersama psikolog klinis universitas secara rahasia dan profesional.</p>',
             'is_active' => true,
             'order' => 2,
         ]);
 
-        $layananKarir = Layanan::create([
-            'title' => 'Pusat Karir & Alumni (Tracer Study)',
-            'slug' => 'karir-alumni',
+        Layanan::create([
+            'title' => 'Pusat Karir & Kewirausahaan (P2K2)',
+            'slug' => 'p2k2',
             'icon' => '💼',
-            'content' => '<h3>Pusat Karir (Career Center)</h3><p>Membantu lulusan dalam transisi memasuki dunia industri (DUDI) melalui seminar kesiapan kerja, info lowongan kerja terpercaya, serta pengisian berkas kuesioner Tracer Study resmi universitas.</p>',
+            'category' => 'Pengembangan Karir & Wirausaha',
+            'fee' => 'Gratis Bagi Mahasiswa & Alumni UNBRAH',
+            'content' => '<h3>Pusat Pengembangan Karir dan Kewirausahaan (P2K2)</h3><p>Membantu mahasiswa dan lulusan dalam transisi memasuki dunia industri (DUDI) melalui seminar kesiapan kerja, inkubasi bisnis mahasiswa, info lowongan kerja terpercaya, serta pelaksanaan Tracer Study resmi universitas.</p>',
             'is_active' => true,
             'order' => 3,
+        ]);
+
+        Layanan::create([
+            'title' => 'Satgas PPKTP',
+            'slug' => 'ppktp',
+            'icon' => '🛡️',
+            'category' => 'Pencegahan & Penanganan Kekerasan',
+            'fee' => 'Layanan Pengaduan Rahasia & Gratis',
+            'content' => '<h3>Satuan Tugas Pencegahan dan Penanganan Kekerasan di Perguruan Tinggi (PPKTP)</h3><p>Memberikan perlindungan, pendampingan, dan tindak lanjut atas laporan kekerasan, perundungan, atau intoleransi di lingkungan kampus Universitas Baiturrahmah dengan menjamin kerahasiaan pelapor.</p>',
+            'is_active' => true,
+            'order' => 4,
+        ]);
+
+        Layanan::create([
+            'title' => 'Student Activity & Performance System (SAPS)',
+            'slug' => 'saps',
+            'icon' => '📊',
+            'category' => 'Penilaian Keaktifan & Prestasi Mahasiswa',
+            'fee' => 'Layanan Akademik & Kemahasiswaan',
+            'content' => '<h3>Sistem Poin Kredit Keaktifan & Prestasi (SAPS)</h3><p>SAPS merekam dan mengakumulasi poin keaktifan mahasiswa dalam organisasi, kepanitiaan, perlombaan, dan kegiatan ilmiah sebagai syarat pendamping kelulusan dan Surat Keterangan Pendamping Ijazah (SKPI).</p>',
+            'is_active' => true,
+            'order' => 5,
+        ]);
+
+        Layanan::create([
+            'title' => 'Hasimaru (Pembinaan Karakter)',
+            'slug' => 'hasimaru',
+            'icon' => '🌱',
+            'category' => 'Orientasi & Pembinaan Karakter Mahasiswa Baru',
+            'fee' => 'Program Wajib Mahasiswa Baru',
+            'content' => '<h3>Hari Silaturahmi Mahasiswa Baru (Hasimaru)</h3><p>Program pengenalan kehidupan kampus dan pembinaan karakter Islami bagi mahasiswa baru Universitas Baiturrahmah guna membentuk insan akademis yang berakhlakul karimah dan berdaya saing unggul.</p>',
+            'is_active' => true,
+            'order' => 6,
         ]);
 
         // ─── 4. SEED ORMAWAS ─────────────────────────────────────────────────────
@@ -161,17 +200,19 @@ class DatabaseSeeder extends Seeder
             'is_published' => true,
             'content' => [
                 [
-                    'type' => 'hero_banner',
+                    'type' => 'hero',
                     'data' => [
-                        'title' => 'Standar Operasional Prosedur (SOP)',
+                        'label' => 'PEDOMAN RESMI',
+                        'title' => 'Standar Operasional Prosedur',
+                        'highlight' => 'Ormawa & Kegiatan',
                         'subtitle' => 'Panduan pengajuan kegiatan dan anggaran organisasi mahasiswa.',
-                        'bg_image' => 'https://kemahasiswaan.unbrah.ac.id/images/banner-sop.jpg'
+                        'align' => 'center'
                     ]
                 ],
                 [
                     'type' => 'text',
                     'data' => [
-                        'content' => '<p class="mb-4">Setiap ormawa yang ingin menyelenggarakan kegiatan wajib mengajukan proposal minimal 14 hari sebelum hari H.</p>'
+                        'html' => '<p class="mb-4">Setiap ormawa yang ingin menyelenggarakan kegiatan wajib mengajukan proposal minimal 14 hari sebelum hari H melalui Bagian Kemahasiswaan Universitas Baiturrahmah.</p>'
                     ]
                 ]
             ]
@@ -207,7 +248,7 @@ class DatabaseSeeder extends Seeder
             'parent_id' => $parentLayananMenu->id,
             'title' => 'Konseling Psikologi',
             'type' => 'layanan',
-            'external_url' => '/layanan?tab=konseling',
+            'external_url' => '/layanan?tab=psikologi',
             'order' => 2,
         ]);
 

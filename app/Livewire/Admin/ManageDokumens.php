@@ -44,6 +44,13 @@ class ManageDokumens extends Component
         'order'               => 'integer',
     ];
 
+    public function mount()
+    {
+        if (!auth()->user() || !auth()->user()->hasAccessToMenu('dokumens')) {
+            abort(403, 'Anda tidak memiliki hak akses untuk halaman ini.');
+        }
+    }
+
     // ─── Open / Close Form ───────────────────────────────────────────────────
     public function openForm($id = null)
     {

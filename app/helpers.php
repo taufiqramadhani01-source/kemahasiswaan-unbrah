@@ -12,16 +12,10 @@ if (!function_exists('setting')) {
      */
     function setting(string $key, $default = null)
     {
-        // Cache setting agar tidak membebani query database berulang-ulang
-        static $settings = null;
-        if (is_null($settings)) {
-            try {
-                $settings = Setting::pluck('value', 'key')->all();
-            } catch (\Exception $e) {
-                $settings = [];
-            }
+        try {
+            return Setting::get($key, $default);
+        } catch (\Exception $e) {
+            return $default;
         }
-
-        return $settings[$key] ?? $default;
     }
 }

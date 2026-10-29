@@ -28,8 +28,10 @@ class BeasiswaList extends Component
         $query = Beasiswa::where('is_active', true);
 
         if (!empty($this->search)) {
-            $query->where('name', 'like', '%' . $this->search . '%')
+            $query->where(function ($q) {
+                $q->where('name', 'like', '%' . $this->search . '%')
                   ->orWhere('provider', 'like', '%' . $this->search . '%');
+            });
         }
 
         if (!empty($this->providerFilter)) {

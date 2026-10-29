@@ -98,6 +98,12 @@ class ManageHomepage extends Component
         $this->wr3_para2      = Setting::get('wr3_para2',      'Melalui pembinaan karakter, dukungan beasiswa, jajaran organisasi kemahasiswaan (Ormawa), serta program penunjang karir alumni, kami berharap dapat melahirkan generasi muda yang tangguh dan berakhlak mulia.');
         $this->wr3_photo_path = Setting::get('wr3_photo_path', '/images/slider2.jpg');
 
+        // Available layanans for dropdown
+        $this->availableLayanans = Layanan::where('is_active', 1)
+            ->orderBy('order')
+            ->get(['id', 'title', 'slug', 'icon'])
+            ->toArray();
+
         // Layanan Cards
         $defaultLayanan = [
             ['label'=>'Layanan 01','title'=>'Layanan Bimbingan Konseling','icon'=>'brain','url'=>'/layanan?tab=psikologi','color'=>'indigo'],
@@ -107,16 +113,22 @@ class ManageHomepage extends Component
             ['label'=>'Layanan 05','title'=>'SAPS (Poin Kredit Prestasi)','icon'=>'gift','url'=>'/layanan?tab=saps','color'=>'rose'],
             ['label'=>'Layanan 06','title'=>'Hasimaru (Pembinaan Karakter)','icon'=>'book','url'=>'/layanan?tab=hasimaru','color'=>'brand-green'],
         ];
-        $this->layanan_cards = json_decode(Setting::get('layanan_cards', json_encode($defaultLayanan)), true);
+        $this->layanan_cards = json_decode(Setting::get('layanan_cards', json_encode($defaultLayanan)), true) ?: $defaultLayanan;
         while (count($this->layanan_cards) < 6) {
             $this->layanan_cards[] = ['layanan_id'=>null,'label'=>'Layanan','title'=>'','icon'=>'briefcase','url'=>'#','color'=>'slate'];
         }
 
-        // Available layanans for dropdown
-        $this->availableLayanans = Layanan::where('is_active', 1)
-            ->orderBy('order')
-            ->get(['id', 'title', 'slug', 'icon'])
-            ->toArray();
+        // Sinkronisasi layanan_id berdasarkan slug URL jika layanan_id belum terisi
+        $slugToId = collect($this->availableLayanans)->pluck('id', 'slug')->all();
+        foreach ($this->layanan_cards as $idx => $card) {
+            if (empty($card['layanan_id']) && !empty($card['url']) && str_contains($card['url'], 'tab=')) {
+                parse_str(parse_url($card['url'], PHP_URL_QUERY) ?? '', $q);
+                $tabSlug = $q['tab'] ?? null;
+                if ($tabSlug && isset($slugToId[$tabSlug])) {
+                    $this->layanan_cards[$idx]['layanan_id'] = $slugToId[$tabSlug];
+                }
+            }
+        }
 
         // About Section
         $this->about_label        = Setting::get('about_label',        'Tentang Kemahasiswaan');
@@ -156,11 +168,11 @@ class ManageHomepage extends Component
 
         // Slides
         $defaultSlides = [
-            ['image'=>'/images/slider2.jpg','badge'=>'Kemahasiswaan UNBRAH','title_line1'=>'Membina Karakter & Potensi','title_line2'=>'Lulusan Unggul & Beretika','description'=>'Mewujudkan pembinaan mahasiswa yang berorientasi pada kepemimpinan, integritas moral, serta kepedulian sosial yang tinggi.','button1_text'=>'Layanan Mahasiswa','button1_link'=>'/layanan','button2_text'=>'Profil Kemahasiswaan','button2_link'=>'/profil'],
+            ['image'=>'/images/slider2.jpg','badge'=>'Kemahasiswaan UNBRAH','title_line1'=>'Membina Karakter & Potensi','title_line2'=>'Lulusan Unggul & Beretika','description'=>'Mewujudkan pembinaan mahasiswa yang berorientasi pada kepemimpinan, integritas moral, serta kepedulian sosial yang tinggi.','button1_text'=>'Layanan Mahasiswa','button1_link'=>'/layanan','button2_text'=>'Profil Kemahasiswaan','button2_link'=>'#about'],
             ['image'=>'/images/slider3.jpg','badge'=>'Prestasi & Minat Bakat','title_line1'=>'Raih Prestasi Gemilang','title_line2'=>'Salurkan Kreativitas & Bakat','description'=>'Didukung oleh berbagai Unit Kegiatan Mahasiswa (UKM) bidang penalaran, seni, olahraga, kerohanian, dan kemanusiaan.','button1_text'=>'Daftar Ormawa','button1_link'=>'/ormawa','button2_text'=>'Layanan Mahasiswa','button2_link'=>'/layanan'],
             ['image'=>'/images/slider1.jpg','badge'=>'Kesejahteraan Mahasiswa','title_line1'=>'Layanan & Bantuan Beasiswa','title_line2'=>'Mendukung Studi Masa Depan','description'=>'Menyediakan program Beasiswa KIP-Kuliah, Beasiswa Yayasan, layanan konseling psikologis gratis, dan pembinaan karir alumni.','button1_text'=>'Arsip Berita','button1_link'=>'/berita','button2_text'=>'Hubungi Kami','button2_link'=>'https://wa.me/628116313712'],
         ];
-        $this->slides = json_decode(Setting::get('slides_list', json_encode($defaultSlides)), true);
+        $this->slides = json_decode(Setting::get('slides_list', json_encode($defaultSlides)), true) ?: $defaultSlides;
     }
 
     public function switchSection(string $section): void
@@ -180,12 +192,26 @@ class ManageHomepage extends Component
 
     public function selectLayananCard(int $index, $layanandId): void
     {
+        $slugMeta = [
+            'psikologi' => ['icon' => 'brain',     'color' => 'indigo'],
+            'konseling' => ['icon' => 'brain',     'color' => 'indigo'],
+            'p2k2'      => ['icon' => 'briefcase', 'color' => 'amber'],
+            'ppktp'     => ['icon' => 'shield',    'color' => 'emerald'],
+            'beasiswa'  => ['icon' => 'money',     'color' => 'blue'],
+            'saps'      => ['icon' => 'gift',      'color' => 'rose'],
+            'hasimaru'  => ['icon' => 'book',      'color' => 'brand-green'],
+        ];
+
         if ($layanandId && $layanan = Layanan::find((int) $layanandId)) {
+            $meta = $slugMeta[$layanan->slug] ?? [
+                'icon'  => $this->layanan_cards[$index]['icon'] ?? 'briefcase',
+                'color' => $this->layanan_cards[$index]['color'] ?? 'brand-green',
+            ];
             $this->layanan_cards[$index]['layanan_id'] = $layanan->id;
             $this->layanan_cards[$index]['title']      = $layanan->title;
             $this->layanan_cards[$index]['url']        = '/layanan?tab=' . $layanan->slug;
-            $this->layanan_cards[$index]['icon']       = 'briefcase';
-            $this->layanan_cards[$index]['color']      = 'brand-green';
+            $this->layanan_cards[$index]['icon']       = $meta['icon'];
+            $this->layanan_cards[$index]['color']      = $meta['color'];
         } else {
             $this->layanan_cards[$index]['layanan_id'] = null;
             $this->layanan_cards[$index]['title']      = '';

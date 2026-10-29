@@ -8,7 +8,7 @@
         <div id="slider" class="relative w-full h-full">
             @php
                 $defaultSlides = [
-                    ['image'=>'/images/slider2.jpg','badge'=>'Kemahasiswaan UNBRAH','title_line1'=>'Membina Karakter & Potensi','title_line2'=>'Lulusan Unggul & Beretika','description'=>'Mewujudkan pembinaan mahasiswa yang berorientasi pada kepemimpinan, integritas moral, serta kepedulian sosial yang tinggi.','button1_text'=>'Layanan Mahasiswa','button1_link'=>'/layanan','button2_text'=>'Profil Kemahasiswaan','button2_link'=>'/profil'],
+                    ['image'=>'/images/slider2.jpg','badge'=>'Kemahasiswaan UNBRAH','title_line1'=>'Membina Karakter & Potensi','title_line2'=>'Lulusan Unggul & Beretika','description'=>'Mewujudkan pembinaan mahasiswa yang berorientasi pada kepemimpinan, integritas moral, serta kepedulian sosial yang tinggi.','button1_text'=>'Layanan Mahasiswa','button1_link'=>'/layanan','button2_text'=>'Profil Kemahasiswaan','button2_link'=>'#about'],
                     ['image'=>'/images/slider3.jpg','badge'=>'Prestasi & Minat Bakat','title_line1'=>'Raih Prestasi Gemilang','title_line2'=>'Salurkan Kreativitas & Bakat','description'=>'Didukung oleh berbagai Unit Kegiatan Mahasiswa (UKM) bidang penalaran, seni, olahraga, kerohanian, dan kemanusiaan.','button1_text'=>'Daftar Ormawa','button1_link'=>'/ormawa','button2_text'=>'Layanan Mahasiswa','button2_link'=>'/layanan'],
                     ['image'=>'/images/slider1.jpg','badge'=>'Kesejahteraan Mahasiswa','title_line1'=>'Layanan & Bantuan Beasiswa','title_line2'=>'Mendukung Studi Masa Depan','description'=>'Menyediakan program Beasiswa KIP-Kuliah, Beasiswa Yayasan, layanan konseling psikologis gratis, dan pembinaan karir alumni.','button1_text'=>'Arsip Berita','button1_link'=>'/berita','button2_text'=>'Hubungi Kami','button2_link'=>'https://wa.me/628116313712'],
                 ];
@@ -35,12 +35,20 @@
                                 @endif
                                 <div class="flex flex-col sm:flex-row justify-start items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
                                     @if(!empty($slide['button1_text']))
-                                        <a href="{{ $slide['button1_link'] ?? '#' }}" wire:navigate class="w-full sm:w-auto text-center bg-brand-gold-500 hover:bg-brand-gold-600 text-brand-green-950 font-bold px-7 py-3.5 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 text-sm no-underline">
+                                        @php
+                                            $btn1Link = ($slide['button1_link'] ?? '#') === '/profil' ? '#about' : ($slide['button1_link'] ?? '#');
+                                            $btn1Attr = str_starts_with($btn1Link, 'http') ? 'target="_blank"' : (str_starts_with($btn1Link, '#') ? '' : 'wire:navigate');
+                                        @endphp
+                                        <a href="{{ $btn1Link }}" {!! $btn1Attr !!} class="w-full sm:w-auto text-center bg-brand-gold-500 hover:bg-brand-gold-600 text-brand-green-950 font-bold px-7 py-3.5 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 text-sm no-underline">
                                             {{ $slide['button1_text'] }}
                                         </a>
                                     @endif
                                     @if(!empty($slide['button2_text']))
-                                        <a href="{{ $slide['button2_link'] ?? '#' }}" {{ str_starts_with($slide['button2_link'] ?? '', 'http') ? 'target="_blank"' : 'wire:navigate' }} class="w-full sm:w-auto text-center border border-white/30 hover:border-white text-white font-semibold px-7 py-3.5 rounded-full hover:bg-white/10 transition-all duration-300 text-sm no-underline">
+                                        @php
+                                            $btn2Link = ($slide['button2_link'] ?? '#') === '/profil' ? '#about' : ($slide['button2_link'] ?? '#');
+                                            $btn2Attr = str_starts_with($btn2Link, 'http') ? 'target="_blank"' : (str_starts_with($btn2Link, '#') ? '' : 'wire:navigate');
+                                        @endphp
+                                        <a href="{{ $btn2Link }}" {!! $btn2Attr !!} class="w-full sm:w-auto text-center border border-white/30 hover:border-white text-white font-semibold px-7 py-3.5 rounded-full hover:bg-white/10 transition-all duration-300 text-sm no-underline">
                                             {{ $slide['button2_text'] }}
                                         </a>
                                     @endif
@@ -122,11 +130,16 @@
         <div class="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12">
             <div class="grid grid-cols-1 md:grid-cols-12 gap-16 items-center">
                 <!-- Foto WR III -->
+                @php
+                    $wr3Photo = setting('wr3_photo_path', '/images/slider2.jpg');
+                    $wr3Para2 = setting('wr3_para2', 'Melalui pembinaan karakter, dukungan beasiswa, jajaran organisasi kemahasiswaan (Ormawa), serta program penunjang karir alumni, kami berharap dapat melahirkan generasi muda yang tangguh dan berakhlak mulia.');
+                    $wr3Quote = setting('wr3_quote', '"Membina Karakter Islami, Mengembangkan Potensi, Mengukir Prestasi."');
+                @endphp
                 <div class="md:col-span-4 flex justify-center reveal-left">
                     <div class="relative w-64 h-80 rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-100 flex items-center justify-center">
                         <div class="absolute inset-0 bg-gradient-to-t from-brand-green-950/70 to-transparent z-10"></div>
-                        @if(!empty(setting('wr3_photo_path')))
-                            <img src="{{ setting('wr3_photo_path') }}" alt="Foto WR III" class="absolute inset-0 w-full h-full object-cover">
+                        @if(!empty($wr3Photo))
+                            <img src="{{ $wr3Photo }}" alt="Foto WR III" class="absolute inset-0 w-full h-full object-cover">
                         @else
                             <svg class="w-48 h-48 text-slate-300 mt-12 animate-pulse" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></svg>
                         @endif
@@ -144,15 +157,15 @@
                     </div>
                     <h2 class="text-3xl font-bold font-display text-slate-900 tracking-tight leading-tight">Sambutan Wakil Rektor III</h2>
                     <p class="text-slate-600 text-sm md:text-base leading-relaxed text-justify">
-                        {{ setting('wr3_para1', 'Selamat datang di portal informasi resmi Bidang Kemahasiswaan & Alumni Universitas Baiturrahmah. Kami berkomitmen penuh untuk memfasilitasi dan mendampingi seluruh mahasiswa dalam mengembangkan bakat, kreativitas, kepemimpinan, dan kesejahteraan mereka selama menempuh pendidikan di kampus.') }}
+                        {{ setting('wr3_para1', 'Selamat datang di portal informasi resmi Bidang Kemahasiswaan & Alumni Universitas Baiturrahmah.') }}
                     </p>
-                    @if(setting('wr3_para2'))
-                        <p class="text-slate-600 text-sm md:text-base leading-relaxed text-justify">{{ setting('wr3_para2') }}</p>
+                    @if(!empty($wr3Para2))
+                        <p class="text-slate-600 text-sm md:text-base leading-relaxed text-justify">{{ $wr3Para2 }}</p>
                     @endif
-                    @if(setting('wr3_quote'))
+                    @if(!empty($wr3Quote))
                         <div class="flex items-center space-x-4 pt-2">
                             <div class="text-brand-green-900 font-display font-semibold text-xs border-l-4 border-brand-gold-500 pl-4 italic">
-                                {{ setting('wr3_quote') }}
+                                {{ $wr3Quote }}
                             </div>
                         </div>
                     @endif

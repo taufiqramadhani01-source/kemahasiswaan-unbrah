@@ -41,6 +41,13 @@ class ManagePosts extends Component
         'published_at' => 'nullable|date',
     ];
 
+    public function mount()
+    {
+        if (!auth()->user() || !auth()->user()->hasAccessToMenu('posts')) {
+            abort(403, 'Anda tidak memiliki hak akses untuk halaman ini.');
+        }
+    }
+
     public function updatedTitle($value)
     {
         $this->slug = Str::slug($value);
@@ -49,7 +56,7 @@ class ManagePosts extends Component
     public function openForm($id = null)
     {
         $this->resetValidation();
-        $this->resetExcept([]);
+        $this->resetExcept(['search', 'isFormOpen']);
 
         if ($id) {
             $post = Post::findOrFail($id);

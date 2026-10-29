@@ -32,6 +32,13 @@ class ManagePrestasis extends Component
         'certificate_file' => 'nullable|file|mimes:pdf,png,jpg,jpeg|max:2048', // max 2MB
     ];
 
+    public function mount()
+    {
+        if (!auth()->user() || !auth()->user()->hasAccessToMenu('prestasis')) {
+            abort(403, 'Anda tidak memiliki hak akses untuk halaman ini.');
+        }
+    }
+
     public function openForm($id = null)
     {
         $this->resetValidation();
@@ -101,8 +108,10 @@ class ManagePrestasis extends Component
 
     public function render()
     {
-        $prestasis = Prestasi::where('student_name', 'like', '%' . $this->search . '%')
-            ->orWhere('title', 'like', '%' . $this->search . '%')
+        $prestasis = Prestasi::where(function ($q) {
+                $q->where('student_name', 'like', '%' . $this->search . '%')
+                  ->orWhere('title', 'like', '%' . $this->search . '%');
+            })
             ->latest()
             ->paginate(10);
 

@@ -1,11 +1,12 @@
 <div>
     @section('title', 'Layanan Kemahasiswaan')
+    @php $currentTab = $tabs->firstWhere('slug', $activeTab) ?? $tabs->first(); @endphp
 
     <!-- HERO SECTION -->
     <section class="relative bg-gradient-to-br from-brand-green-950 to-brand-green-900 py-12 text-white overflow-hidden shadow-xl">
         <div class="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 text-center relative z-10 space-y-3">
             <h1 class="text-3xl sm:text-5xl md:text-6xl font-bold font-display tracking-tight text-white leading-tight drop-shadow">
-                <span id="layanan-banner-title">{{ $tabs->first()?->title ?? 'Layanan Mahasiswa' }}</span><br class="hidden sm:inline">
+                <span id="layanan-banner-title">{{ $currentTab?->title ?? 'Layanan Mahasiswa' }}</span><br class="hidden sm:inline">
                 <span class="bg-gradient-to-r from-brand-gold-500 to-brand-gold-100 bg-clip-text text-transparent">Universitas Baiturrahmah</span>
             </h1>
             <p class="text-base md:text-lg text-slate-300/90 max-w-none mx-auto font-light leading-relaxed">
@@ -17,7 +18,20 @@
     <!-- TABS DETAIL CONTENT -->
     <section class="py-20 bg-slate-50 min-h-[600px]">
         <div class="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12">
-            @php $currentTab = $tabs->firstWhere('slug', $activeTab); @endphp
+            @if($tabs->count() > 1)
+                <div class="flex flex-wrap justify-center gap-2.5 mb-12">
+                    @foreach($tabs as $tab)
+                        <button type="button"
+                                wire:click="switchTab('{{ $tab->slug }}')"
+                                class="px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 {{ $currentTab?->slug === $tab->slug ? 'bg-brand-green-900 text-white shadow-md ring-2 ring-brand-gold-500/40' : 'bg-white text-slate-600 hover:bg-brand-green-50 hover:text-brand-green-900 border border-slate-200' }}">
+                            @if($tab->icon)
+                                <span>{{ $tab->icon }}</span>
+                            @endif
+                            <span>{{ $tab->title }}</span>
+                        </button>
+                    @endforeach
+                </div>
+            @endif
 
             @if($currentTab)
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">

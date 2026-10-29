@@ -39,6 +39,13 @@ class ManageKegiatans extends Component
         'ormawa_id' => 'nullable|exists:ormawas,id',
     ];
 
+    public function mount()
+    {
+        if (!auth()->user() || !auth()->user()->hasAccessToMenu('kegiatans')) {
+            abort(403, 'Anda tidak memiliki hak akses untuk halaman ini.');
+        }
+    }
+
     public function updatedTitle($value)
     {
         $this->slug = Str::slug($value);
@@ -47,7 +54,7 @@ class ManageKegiatans extends Component
     public function openForm($id = null)
     {
         $this->resetValidation();
-        $this->resetExcept([]);
+        $this->resetExcept(['search', 'isFormOpen']);
 
         if ($id) {
             $kegiatan = Kegiatan::findOrFail($id);

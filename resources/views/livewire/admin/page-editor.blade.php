@@ -1,11 +1,7 @@
 <div>
     <x-slot name="title">{{ $pageId ? 'Edit Halaman' : 'Tambah Halaman' }} - Dasbor Kemahasiswaan</x-slot>
 
-    {{-- CKEditor 5 & Styling --}}
-    @once
-        <script src="https://cdn.ckeditor.com/ckeditor5/43.3.0/ckeditor5.umd.js"></script>
-        <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.3.0/ckeditor5.css">
-    @endonce
+    {{-- CKEditor 5 Styling (Script & CSS sudah dimuat secara lokal di layouts.app) --}}
     <style>
         .ck-block .ck-editor__editable { min-height: 150px !important; font-size: 13px !important; }
         .ck-block .ck-toolbar { border-radius: 12px 12px 0 0 !important; border-color: #e5e2d9 !important; background-color: #faf9f6 !important; }
@@ -480,7 +476,7 @@
                                                                 class="text-[8px] text-red-500 font-bold border border-red-100 hover:bg-red-50 px-1.5 py-0.5 rounded">Hapus Item</button>
                                                         </div>
                                                         <input type="text" placeholder="Judul Akordion (Pertanyaan)..."
-                                                            wire:model="blocks.{{ $i }}.data.items.{{ $subIdx }.title"
+                                                            wire:model="blocks.{{ $i }}.data.items.{{ $subIdx }}.title"
                                                             class="w-full px-3 py-1.5 border border-[#dcd9d0] rounded-lg text-xs font-bold">
                                                         
                                                         {{-- CKEditor untuk isi akordion --}}
