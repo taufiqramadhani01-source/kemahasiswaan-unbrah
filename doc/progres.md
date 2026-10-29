@@ -130,9 +130,10 @@ Dokumen ini mencatat riwayat *setup*, audit sistem, dan perbaikan *bug* pada pro
       3. Pratinjau foto baru (`slide_photo_files` dan `wr3_photo_file`) tidak menampilkan gambar *temporary upload* sebelum disimpan.
       4. `Setting::get($key, $default)` menyimpan nilai `$default` secara permanen di `Cache::rememberForever("setting_{$key}")`, sehingga pemanggilan `setting('wr3_photo_path')`, `setting('wr3_para2')`, dan `setting('wr3_quote')` tanpa default di `home.blade.php` mengunci nilai `null` di cache.
       5. Link default tombol 2 pada Slide #1 mengarah ke `/profil` (404 Not Found) alih-alih `#about` dan atribut `wire:navigate` dipasang pada link anchor `#`.
+      6. Penggunaan `wire:model.live` agresif pada 27 kolom input form beranda dan form admin lainnya memicu banjir request HTTP ke endpoint `/livewire-.../update` pada setiap ketukan keyboard (keystroke), memicu limitasi request / proteksi rate limit server (403 Forbidden) dan bentrokan dialog modal Livewire.
     - **Perbaikan**:
       - Menyinkronkan `layanan_id` otomatis berdasarkan slug `?tab=` pada `mount()` dan mempertahankan pemetaan ikon & warna spesifik tiap layanan di `selectLayananCard()`.
-      - Mengganti seluruh `wire:change` menjadi `wire:model.live` serta menambahkan alert ringkasan error validasi di bagian atas halaman `/admin/homepage`.
+      - Mengganti seluruh `wire:model.live` pada kolom input teks form menjadi `wire:model.blur` sehingga request baru dikirim saat kursor berpindah (blur) atau tombol simpan ditekan, serta menambahkan `debounce.400ms` pada input pembuatan slug otomatis (`manage-ormawas`, `manage-kegiatans`, `manage-layanans`, `page-editor`).
       - Menambahkan pratinjau langsung menggunakan `temporaryUrl()` untuk unggahan foto *Slide Banner* dan *Foto WR III* baik di form maupun di panel pratinjau kanan.
       - Memperbarui `Setting::get()` agar hanya meng-cache kamus data dari tabel `settings` (`app_settings_all`) tanpa mengunci parameter `$default`, serta menyelaraskan nilai default Sambutan WR III di `home.blade.php`.
       - Mengubah link default tombol 2 Slide #1 dari `/profil` ke `#about` dan menonaktifkan `wire:navigate` untuk link anchor (`#`) maupun eksternal (`http`).
