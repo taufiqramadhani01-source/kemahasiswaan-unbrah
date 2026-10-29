@@ -97,7 +97,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-[10px] font-bold uppercase tracking-wider text-[#8c887d] mb-1.5">Nama Layanan</label>
-                            <input type="text" wire:model.live="title" placeholder="Contoh: Beasiswa Mahasiswa" 
+                            <input type="text" wire:model.live.debounce.400ms="title" placeholder="Contoh: Beasiswa Mahasiswa" 
                                 class="w-full px-4 py-2 border border-[#dcd9d0] rounded-xl text-xs focus:outline-none focus:border-[#c8b282] bg-white @error('title') border-red-300 @enderror">
                             @error('title') <p class="text-red-500 text-[10px] mt-1">{{ $message }}</p> @enderror
                         </div>

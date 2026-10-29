@@ -93,13 +93,13 @@
                                 ] as [$f,$l])
                                 <div>
                                     <label class="block text-[10px] font-bold text-[#5c5950] uppercase tracking-wider mb-1">{{ $l }}</label>
-                                    <input type="text" wire:model.live="slides.{{ $i }}.{{ $f }}"
+                                    <input type="text" wire:model.blur="slides.{{ $i }}.{{ $f }}"
                                         class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 focus:outline-none focus:border-[#052c22] bg-[#faf9f6]">
                                 </div>
                                 @endforeach
                                 <div class="md:col-span-2">
                                     <label class="block text-[10px] font-bold text-[#5c5950] uppercase tracking-wider mb-1">Deskripsi Ringkas</label>
-                                    <textarea wire:model.live="slides.{{ $i }}.description" rows="2"
+                                    <textarea wire:model.blur="slides.{{ $i }}.description" rows="2"
                                         class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 focus:outline-none focus:border-[#052c22] bg-[#faf9f6] resize-none"></textarea>
                                 </div>
                             </div>
@@ -126,25 +126,25 @@
                         <div class="flex-1 space-y-4">
                             <div>
                                 <label class="block text-[10px] font-bold text-[#5c5950] uppercase tracking-wider mb-1">Nama Wakil Rektor III & Gelar</label>
-                                <input type="text" wire:model.live="wr3_name"
+                                <input type="text" wire:model.blur="wr3_name"
                                     class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 focus:outline-none focus:border-[#052c22] bg-[#faf9f6]">
                                 @error('wr3_name') <p class="text-red-500 text-[10px] mt-1">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label class="block text-[10px] font-bold text-[#5c5950] uppercase tracking-wider mb-1">Motto Utama / Quote Singkat</label>
-                                <input type="text" wire:model.live="wr3_quote"
+                                <input type="text" wire:model.blur="wr3_quote"
                                     class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 focus:outline-none focus:border-[#052c22] bg-[#faf9f6]">
                             </div>
                         </div>
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-[#5c5950] uppercase tracking-wider mb-1">Sambutan Paragraf 1</label>
-                        <textarea wire:model.live="wr3_para1" rows="4"
+                        <textarea wire:model.blur="wr3_para1" rows="4"
                             class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 focus:outline-none focus:border-[#052c22] bg-[#faf9f6] resize-none"></textarea>
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-[#5c5950] uppercase tracking-wider mb-1">Sambutan Paragraf 2</label>
-                        <textarea wire:model.live="wr3_para2" rows="4"
+                        <textarea wire:model.blur="wr3_para2" rows="4"
                             class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 focus:outline-none focus:border-[#052c22] bg-[#faf9f6] resize-none"></textarea>
                     </div>
                 </div>
@@ -195,7 +195,7 @@
                                 {{-- Label Kecil --}}
                                 <div class="col-span-3">
                                     <input type="text"
-                                        wire:model.live="layanan_cards.{{ $i }}.label"
+                                        wire:model.blur="layanan_cards.{{ $i }}.label"
                                         class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 focus:outline-none focus:border-[#052c22] bg-white"
                                         placeholder="Layanan 0{{ $i + 1 }}">
                                 </div>
@@ -227,33 +227,33 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-[10px] font-semibold text-[#8c887d] mb-1">Sub-label Atas</label>
-                                <input type="text" wire:model.live="about_label"
+                                <input type="text" wire:model.blur="about_label"
                                     class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 focus:outline-none focus:border-[#052c22] bg-[#faf9f6]">
                             </div>
                             <div>
                                 <label class="block text-[10px] font-semibold text-[#8c887d] mb-1">Judul Utama</label>
-                                <input type="text" wire:model.live="about_title"
+                                <input type="text" wire:model.blur="about_title"
                                     class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 focus:outline-none focus:border-[#052c22] bg-[#faf9f6]">
                             </div>
                         </div>
                         <div>
                             <label class="block text-[10px] font-semibold text-[#8c887d] mb-1">Paragraf Deskripsi Profil</label>
-                            <textarea wire:model.live="about_description" rows="4"
+                            <textarea wire:model.blur="about_description" rows="4"
                                 class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 focus:outline-none focus:border-[#052c22] bg-[#faf9f6] resize-none"></textarea>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                             <div class="space-y-2 p-3 bg-[#faf9f6] border border-[#e5e2d9] rounded-xl">
                                 <p class="text-[10px] font-bold text-[#1a2421]">Poin Keunggulan 1</p>
-                                <input type="text" wire:model.live="about_point1_title"
+                                <input type="text" wire:model.blur="about_point1_title"
                                     class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 focus:outline-none focus:border-[#052c22] bg-white">
-                                <input type="text" wire:model.live="about_point1_desc"
+                                <input type="text" wire:model.blur="about_point1_desc"
                                     class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 focus:outline-none focus:border-[#052c22] bg-white" placeholder="Keterangan singkat">
                             </div>
                             <div class="space-y-2 p-3 bg-[#faf9f6] border border-[#e5e2d9] rounded-xl">
                                 <p class="text-[10px] font-bold text-[#1a2421]">Poin Keunggulan 2</p>
-                                <input type="text" wire:model.live="about_point2_title"
+                                <input type="text" wire:model.blur="about_point2_title"
                                     class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 focus:outline-none focus:border-[#052c22] bg-white">
-                                <input type="text" wire:model.live="about_point2_desc"
+                                <input type="text" wire:model.blur="about_point2_desc"
                                     class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 focus:outline-none focus:border-[#052c22] bg-white" placeholder="Keterangan singkat">
                             </div>
                         </div>
@@ -263,12 +263,12 @@
                         <h3 class="text-[10px] font-bold text-[#5c5950] uppercase tracking-wider pb-2 border-b border-[#f0ede7]">▶️ Profil Video</h3>
                         <div>
                             <label class="block text-[10px] font-semibold text-[#8c887d] mb-1">URL YouTube Video</label>
-                            <input type="text" wire:model.live="video_youtube_url"
+                            <input type="text" wire:model.blur="video_youtube_url"
                                 class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 focus:outline-none focus:border-[#052c22] bg-[#faf9f6]">
                         </div>
                         <div>
                             <label class="block text-[10px] font-semibold text-[#8c887d] mb-1">Keterangan Singkat Video</label>
-                            <input type="text" wire:model.live="video_title"
+                            <input type="text" wire:model.blur="video_title"
                                 class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 focus:outline-none focus:border-[#052c22] bg-[#faf9f6]">
                         </div>
                     </div>
@@ -281,22 +281,22 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-[10px] font-semibold text-[#8c887d] mb-1">Telepon Kantor</label>
-                            <input type="text" wire:model.live="contact_phone"
+                            <input type="text" wire:model.blur="contact_phone"
                                 class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 focus:outline-none focus:border-[#052c22] bg-[#faf9f6]">
                         </div>
                         <div>
                             <label class="block text-[10px] font-semibold text-[#8c887d] mb-1">Email Kantor</label>
-                            <input type="email" wire:model.live="contact_email"
+                            <input type="email" wire:model.blur="contact_email"
                                 class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 focus:outline-none focus:border-[#052c22] bg-[#faf9f6]">
                         </div>
                         <div>
                             <label class="block text-[10px] font-semibold text-[#8c887d] mb-1">Jam Pelayanan</label>
-                            <input type="text" wire:model.live="contact_hours"
+                            <input type="text" wire:model.blur="contact_hours"
                                 class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 focus:outline-none focus:border-[#052c22] bg-[#faf9f6]">
                         </div>
                         <div>
                             <label class="block text-[10px] font-semibold text-[#8c887d] mb-1">WhatsApp Hubungi Kami (Floating & CTA)</label>
-                            <input type="text" wire:model.live="whatsapp_number"
+                            <input type="text" wire:model.blur="whatsapp_number"
                                 class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 focus:outline-none focus:border-[#052c22] bg-[#faf9f6]"
                                 placeholder="628116313712">
                         </div>
@@ -306,13 +306,13 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="p-3 bg-[#faf9f6] border border-[#e5e2d9] rounded-xl space-y-2">
                             <p class="text-[9px] font-bold uppercase text-[#052c22]">Link Pertama</p>
-                            <input type="text" wire:model.live="topbar_link1_label" class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-1.5 bg-white">
-                            <input type="text" wire:model.live="topbar_link1_url" class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-1.5 bg-white" placeholder="/url">
+                            <input type="text" wire:model.blur="topbar_link1_label" class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-1.5 bg-white">
+                            <input type="text" wire:model.blur="topbar_link1_url" class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-1.5 bg-white" placeholder="/url">
                         </div>
                         <div class="p-3 bg-[#faf9f6] border border-[#e5e2d9] rounded-xl space-y-2">
                             <p class="text-[9px] font-bold uppercase text-[#052c22]">Link Kedua</p>
-                            <input type="text" wire:model.live="topbar_link2_label" class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-1.5 bg-white">
-                            <input type="text" wire:model.live="topbar_link2_url" class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-1.5 bg-white" placeholder="/url">
+                            <input type="text" wire:model.blur="topbar_link2_label" class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-1.5 bg-white">
+                            <input type="text" wire:model.blur="topbar_link2_url" class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-1.5 bg-white" placeholder="/url">
                         </div>
                     </div>
                 </div>
@@ -324,15 +324,15 @@
                         <h3 class="text-[10px] font-bold text-[#5c5950] uppercase tracking-wider pb-2 border-b border-[#f0ede7]">🏢 Deskripsi & Alamat</h3>
                         <div>
                             <label class="block text-[10px] font-semibold text-[#8c887d] mb-1">Tagline Singkat Footer</label>
-                            <input type="text" wire:model.live="footer_tagline" class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 bg-[#faf9f6]">
+                            <input type="text" wire:model.blur="footer_tagline" class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 bg-[#faf9f6]">
                         </div>
                         <div>
                             <label class="block text-[10px] font-semibold text-[#8c887d] mb-1">Alamat Lengkap Kantor</label>
-                            <textarea wire:model.live="contact_address" rows="3" class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 bg-[#faf9f6] resize-none"></textarea>
+                            <textarea wire:model.blur="contact_address" rows="3" class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 bg-[#faf9f6] resize-none"></textarea>
                         </div>
                         <div>
                             <label class="block text-[10px] font-semibold text-[#8c887d] mb-1">Hak Cipta (Copyright)</label>
-                            <input type="text" wire:model.live="footer_copyright" class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 bg-[#faf9f6]">
+                            <input type="text" wire:model.blur="footer_copyright" class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-2 bg-[#faf9f6]">
                         </div>
                     </div>
 
@@ -343,12 +343,12 @@
                                 <div class="grid grid-cols-2 gap-3 p-3 border border-[#e5e2d9] rounded-xl bg-[#faf9f6]">
                                     <div>
                                         <label class="block text-[9px] text-[#8c887d] mb-0.5">Nama Link {{ $j+1 }}</label>
-                                        <input type="text" wire:model.live="footer_external_links.{{ $j }}.label"
+                                        <input type="text" wire:model.blur="footer_external_links.{{ $j }}.label"
                                             class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-1.5 bg-white">
                                     </div>
                                     <div>
                                         <label class="block text-[9px] text-[#8c887d] mb-0.5">URL Target {{ $j+1 }}</label>
-                                        <input type="text" wire:model.live="footer_external_links.{{ $j }}.url"
+                                        <input type="text" wire:model.blur="footer_external_links.{{ $j }}.url"
                                             class="w-full text-xs border border-[#e5e2d9] rounded-lg px-3 py-1.5 bg-white">
                                     </div>
                                 </div>

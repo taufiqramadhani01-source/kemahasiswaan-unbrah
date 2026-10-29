@@ -112,7 +112,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-[10px] font-bold uppercase tracking-wider text-[#8c887d] mb-1.5">Judul Kegiatan</label>
-                            <input type="text" wire:model.live="title" placeholder="misal: Latihan Kepemimpinan LKMM" 
+                            <input type="text" wire:model.live.debounce.400ms="title" placeholder="misal: Latihan Kepemimpinan LKMM" 
                                 class="w-full px-4 py-2 border border-[#dcd9d0] rounded-xl text-xs focus:outline-none focus:border-[#c8b282] bg-[#faf9f6]">
                         </div>
                         <div>

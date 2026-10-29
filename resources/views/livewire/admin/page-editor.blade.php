@@ -61,7 +61,7 @@
                 {{-- Judul Halaman --}}
                 <div>
                     <label class="block text-[10px] font-bold uppercase tracking-wider text-[#8c887d] mb-1.5">Judul Halaman Publik</label>
-                    <input type="text" wire:model.live="title" placeholder="Contoh: Layanan Kesejahteraan Mahasiswa"
+                    <input type="text" wire:model.live.debounce.400ms="title" placeholder="Contoh: Layanan Kesejahteraan Mahasiswa" 
                         class="w-full px-3 py-2 border border-[#dcd9d0] rounded-xl text-xs focus:outline-none focus:border-[#c8b282] transition @error('title') border-red-300 @enderror">
                     @error('title') <p class="text-red-500 text-[10px] mt-1">{{ $message }}</p> @enderror
                 </div>
