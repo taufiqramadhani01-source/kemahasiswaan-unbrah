@@ -138,6 +138,22 @@ Dokumen ini mencatat riwayat *setup*, audit sistem, dan perbaikan *bug* pada pro
       - Memperbarui `Setting::get()` agar hanya meng-cache kamus data dari tabel `settings` (`app_settings_all`) tanpa mengunci parameter `$default`, serta menyelaraskan nilai default Sambutan WR III di `home.blade.php`.
       - Mengubah link default tombol 2 Slide #1 dari `/profil` ke `#about` dan menonaktifkan `wire:navigate` untuk link anchor (`#`) maupun eksternal (`http`).
 
+13. **Peningkatan Fitur Unggah Dokumen (`/admin/dokumens`)**
+    - **File**:
+      - `app/Livewire/Admin/ManageDokumens.php`
+      - `resources/views/livewire/admin/manage-dokumens.blade.php`
+      - `tests/Feature/DokumenUploadTest.php`
+    - **Masalah**:
+      1. Teks helper menjanjikan pengisian otomatis informasi berkas saat diunggah, namun tidak ada hook `updatedUploadedFile()` sehingga input judul, tipe berkas, dan ukuran berkas tetap kosong di layar.
+      2. Tidak ada indikator visual ketika proses upload berkas selesai (pengguna tidak mengetahui apakah berkas sudah berhasil diunggah atau belum).
+      3. Tombol *"Simpan Dokumen"* tidak terkunci saat proses upload berlangsung (`wire:loading.attr="disabled"`), sehingga berisiko menyimpan dokumen kosong jika tombol diklik sebelum proses unggah selesai.
+      4. Penyimpanan URL menggunakan `Storage::url()` berpotensi menghasilkan domain `http://localhost` jika konfigurasi `APP_URL` di server belum disesuaikan.
+    - **Perbaikan**:
+      - Menambahkan method `updatedUploadedFile()` untuk mendeteksi ekstensi secara otomatis (`pdf`, `docx`, `xlsx`), menghitung ukuran berkas (KB / MB), dan mengisi judul dokumen secara otomatis jika belum diisi.
+      - Menambahkan badge sukses unggah berkas (`✅ [Nama Berkas] ([Ukuran])`) beserta tombol pembatalan/ganti file (`removeUploadedFile()`).
+      - Mengunci tombol *"Simpan Dokumen"* dengan status *disabled* dan indikator teks `Tunggu Unggahan...` saat berkas sedang diproses.
+      - Mengubah penyimpanan URL menjadi relative path `/storage/dokumens/...` dan menyinkronkan kolom `kategori` dengan slug kategori dokumen.
+
 ---
 
 ### 4. Verifikasi Akhir
