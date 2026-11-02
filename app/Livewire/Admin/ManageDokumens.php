@@ -90,13 +90,52 @@ class ManageDokumens extends Component
         $this->isFormOpen = false;
     }
 
+    public function updatedUploadedFile()
+    {
+        $this->validateOnly('uploaded_file');
+
+        if ($this->uploaded_file) {
+            $ext = strtolower($this->uploaded_file->getClientOriginalExtension());
+            if (in_array($ext, ['pdf', 'docx', 'xlsx'])) {
+                $this->tipe_file = $ext;
+            } else {
+                $this->tipe_file = 'link';
+            }
+
+            $bytes = $this->uploaded_file->getSize();
+            if ($bytes >= 1048576) {
+                $this->ukuran_file = number_format($bytes / 1048576, 1) . ' MB';
+            } else {
+                $this->ukuran_file = number_format($bytes / 1024, 0) . ' KB';
+            }
+
+            // Jika judul masih kosong, otomatis isi dengan nama file tanpa ekstensi
+            if (empty(trim($this->judul))) {
+                $rawName = pathinfo($this->uploaded_file->getClientOriginalName(), PATHINFO_FILENAME);
+                $this->judul = ucwords(str_replace(['_', '-'], ' ', $rawName));
+            }
+        }
+    }
+
+    public function removeUploadedFile()
+    {
+        $this->uploaded_file = null;
+        if (str_starts_with($this->url_file, '/storage/dokumens/')) {
+            $this->url_file = '';
+            $this->ukuran_file = '';
+        }
+    }
+
     // ─── Save Dokumen ────────────────────────────────────────────────────────
     public function save()
     {
         $this->validate();
 
+        $kategoriSlug = DokumenKategori::find($this->dokumen_kategori_id)?->slug ?? 'umum';
+
         $data = [
             'dokumen_kategori_id' => $this->dokumen_kategori_id,
+            'kategori'            => $kategoriSlug,
             'judul'               => $this->judul,
             'deskripsi'           => $this->deskripsi,
             'url_file'            => $this->url_file,
@@ -108,21 +147,18 @@ class ManageDokumens extends Component
 
         // Jika ada file yang di-upload
         if ($this->uploaded_file) {
-            // Dapatkan ekstensi file
             $ext = strtolower($this->uploaded_file->getClientOriginalExtension());
-            
-            // Simpan ke folder public/dokumens
             $path = $this->uploaded_file->store('dokumens', 'public');
-            $data['url_file'] = Storage::url($path);
+            
+            // Gunakan relative path agar selalu valid di production maupun local
+            $data['url_file'] = '/storage/' . $path;
 
-            // Set tipe file otomatis
             if (in_array($ext, ['pdf', 'docx', 'xlsx'])) {
                 $data['tipe_file'] = $ext;
             } else {
                 $data['tipe_file'] = 'link';
             }
 
-            // Hitung ukuran file otomatis (dalam MB atau KB)
             $bytes = $this->uploaded_file->getSize();
             if ($bytes >= 1048576) {
                 $data['ukuran_file'] = number_format($bytes / 1048576, 1) . ' MB';

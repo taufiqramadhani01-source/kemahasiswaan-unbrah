@@ -147,10 +147,42 @@
                     <!-- Upload Berkas Baru -->
                     <div class="p-4 bg-[#faf9f6] rounded-xl border border-[#e5e2d9] space-y-3">
                         <label class="block text-[10px] font-bold uppercase tracking-wider text-[#052c22]">Upload File (Maks. 10MB)</label>
-                        <input type="file" wire:model="uploaded_file" class="text-xs file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
-                        <div wire:loading wire:target="uploaded_file" class="text-[10px] text-emerald-600">Sedang mengunggah...</div>
-                        @error('uploaded_file') <p class="text-red-500 text-[10px] mt-1">{{ $message }}</p> @enderror
-                        <p class="text-[9px] text-[#8c887d]">Mengunggah file akan otomatis mengisi URL, tipe, dan ukuran berkas.</p>
+                        
+                        @if ($uploaded_file)
+                            <div class="flex items-center justify-between p-3 bg-emerald-50 border border-emerald-200 rounded-xl">
+                                <div class="flex items-center space-x-2 text-xs text-emerald-800 truncate mr-2">
+                                    <span class="text-base">✅</span>
+                                    <div class="truncate">
+                                        <p class="font-bold truncate">{{ $uploaded_file->getClientOriginalName() }}</p>
+                                        <p class="text-[10px] text-emerald-600 font-mono">{{ $ukuran_file ?: 'Siap disimpan' }} • {{ strtoupper($tipe_file) }}</p>
+                                    </div>
+                                </div>
+                                <button type="button" wire:click="removeUploadedFile" class="text-xs text-red-500 hover:text-red-700 font-bold px-2 py-1 hover:bg-red-50 rounded-lg shrink-0 transition">
+                                    ✕ Ganti File
+                                </button>
+                            </div>
+                        @else
+                            <input type="file" wire:model="uploaded_file" class="text-xs file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 cursor-pointer">
+                        @endif
+
+                        <div wire:loading wire:target="uploaded_file" class="flex items-center space-x-2 text-[11px] text-emerald-600 font-semibold">
+                            <svg class="animate-spin h-3.5 w-3.5 text-emerald-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <span>Sedang mengunggah berkas ke server...</span>
+                        </div>
+
+                        @error('uploaded_file') <p class="text-red-500 text-[10px] mt-1 font-semibold">{{ $message }}</p> @enderror
+
+                        @if ($dokumenId && $url_file && !$uploaded_file)
+                            <div class="p-2.5 bg-blue-50 border border-blue-200 rounded-xl text-xs text-blue-800 flex items-center justify-between">
+                                <span class="truncate">Berkas saat ini: <a href="{{ $url_file }}" target="_blank" class="underline font-bold">{{ $url_file }}</a></span>
+                                <span class="text-[10px] text-blue-600 font-mono ml-2 shrink-0">{{ $ukuran_file }}</span>
+                            </div>
+                        @endif
+
+                        <p class="text-[9px] text-[#8c887d]">Mengunggah berkas akan otomatis mengisi Judul, Tipe, dan Ukuran berkas.</p>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -180,8 +212,14 @@
 
                 <!-- Modal Footer -->
                 <div class="p-6 border-t border-[#e5e2d9] bg-[#faf9f6] flex justify-end gap-3">
-                    <button wire:click="closeForm" class="px-5 py-2 rounded-xl text-xs font-bold text-[#5c5950] bg-white border border-[#dcd9d0] hover:bg-gray-50 transition">Batal</button>
-                    <button wire:click="save" class="px-5 py-2 rounded-xl text-xs font-bold text-[#c8b282] bg-[#052c22] hover:bg-[#073d30] transition">Simpan Dokumen</button>
+                    <button wire:click="closeForm" type="button" class="px-5 py-2 rounded-xl text-xs font-bold text-[#5c5950] bg-white border border-[#dcd9d0] hover:bg-gray-50 transition cursor-pointer">Batal</button>
+                    <button wire:click="save" type="button" wire:loading.attr="disabled" wire:target="uploaded_file, save"
+                        class="flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-bold text-[#c8b282] bg-[#052c22] hover:bg-[#073d30] disabled:opacity-50 disabled:cursor-not-allowed transition cursor-pointer">
+                        <svg wire:loading wire:target="save" class="animate-spin w-3.5 h-3.5 text-[#c8b282]" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
+                        <span wire:loading.remove wire:target="uploaded_file, save">Simpan Dokumen</span>
+                        <span wire:loading wire:target="uploaded_file">Tunggu Unggahan...</span>
+                        <span wire:loading wire:target="save">Menyimpan...</span>
+                    </button>
                 </div>
             </div>
         </div>
